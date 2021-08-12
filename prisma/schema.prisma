@@ -14,18 +14,12 @@ model User {
   id        String   @id @default(uuid())
   username  String   @unique
   email     String   @unique
-  firstname String?
-  lastname  String?
-  biography String?
-  avatarUrl String?  @map(name: "avatar_url")
   password  String
   role      Role     @default(USER)
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 
-  Picture  Picture[]
-  Album    Album[]
-  Category Category[]
+  Profile Profile?
   @@map(name: "users")
 }
 
@@ -34,13 +28,31 @@ enum Role {
   ADMIN
 }
 
+model Profile {
+  id        String   @id @default(uuid())
+  firstname String?
+  lastname  String?
+  biography String?
+  avatarUrl String?  @map(name: "avatar_url")
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  user     User       @relation(fields: [userId], references: [id])
+  userId   String     @map(name: "user_id")
+  Picture  Picture[]
+  Album    Album[]
+  Category Category[]
+
+  @@map(name: "profiles")
+}
+
 model Picture {
   id          String   @id @default(uuid())
   title       String
   description String?
   url         String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @map("user_id")
+  profile     Profile  @relation(fields: [profileId], references: [id])
+  profileId   String   @map(name: "profile_id")
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @default(now()) @map(name: "updated_at")
   albums      Album[]
@@ -49,16 +61,17 @@ model Picture {
 }
 
 model Album {
-  id          String     @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
   description String?
-  published   Boolean    @default(false)
-  createdAt   DateTime   @default(now()) @map(name: "created_at")
-  updatedAt   DateTime   @default(now()) @updatedAt @map(name: "updated_at")
-  user        User       @relation(fields: [userId], references: [id])
-  userId      String     @map("user_id")
-  pictures    Picture[]
-  categories  Category[]
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  profile    Profile    @relation(fields: [profileId], references: [id])
+  profileId  String     @map(name: "profile_id")
+  pictures   Picture[]
+  categories Category[]
 
   @@map(name: "albums")
 }
@@ -68,9 +81,10 @@ model Category {
   name      String
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
   albums    Album[]
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @map("user_id")
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @map(name: "profile_id")
 
   @@map(name: "categories")
 }
