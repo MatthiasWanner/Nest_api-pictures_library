@@ -1,0 +1,21 @@
+version: '3.1'
+services:
+  postgres:
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_USER: photos_library
+      POSTGRES_PASSWORD: photos_library
+      POSTGRES_DB: photos_library
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+    ports:
+      - '5432:5432'
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  db-data: # named volumes can be managed easier using docker-compose
