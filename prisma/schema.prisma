@@ -30,8 +30,8 @@ enum Role {
 
 model Profile {
   id        String   @id @default(uuid())
-  firstname String?
-  lastname  String?
+  firstName String?
+  lastName  String?
   biography String?
   avatarUrl String?  @map(name: "avatar_url")
   createdAt DateTime @default(now()) @map(name: "created_at")
