@@ -48,7 +48,7 @@ export class ProfilesController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
-      return await this.service.findOne(+id);
+      return await this.service.findOne({ id });
     } catch (error) {
       return error;
     }
@@ -62,7 +62,7 @@ export class ProfilesController {
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
     try {
-      return await this.service.update(+id, updateProfileDto);
+      return await this.service.update(id, updateProfileDto);
     } catch (error) {
       return error;
     }
@@ -73,7 +73,8 @@ export class ProfilesController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
-      return await this.service.remove(+id);
+      await this.service.remove(id);
+      return { message: 'Profile Deleted' };
     } catch (error) {
       return error;
     }
