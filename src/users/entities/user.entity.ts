@@ -10,15 +10,15 @@ enum UserRole {
 class User {
   @ApiProperty()
   @IsString()
-  readonly id: string;
+  readonly id!: string;
 
   @ApiProperty()
   @IsString()
-  readonly createdAt: Date;
+  readonly createdAt!: Date;
 
   @ApiProperty()
   @IsString()
-  readonly updatedAt: Date;
+  readonly updatedAt!: Date;
 
   // extends from CreateUserDto but return a tyerror
   @ApiProperty({
@@ -26,19 +26,19 @@ class User {
   })
   @IsString()
   @Type(() => String)
-  readonly username: string;
+  readonly username!: string;
 
   @ApiProperty({
     required: true,
   })
   @IsEmail()
   @Type(() => String)
-  readonly email: string;
+  readonly email!: string;
 
   @ApiProperty({
     required: true,
   })
   @IsEnum(UserRole)
-  readonly role: 'ADMIN' | 'USER';
+  readonly role!: 'ADMIN' | 'USER';
 }
 export { User, UserRole };

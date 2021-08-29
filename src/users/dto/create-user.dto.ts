@@ -9,26 +9,26 @@ class CreateUserDto {
   })
   @IsString()
   @Type(() => String)
-  readonly username: string;
+  readonly username!: string;
 
   @ApiProperty({
     required: true,
   })
   @IsEmail()
   @Type(() => String)
-  readonly email: string;
+  readonly email!: string;
 
   @ApiProperty({
     required: true,
   })
   @IsEnum(UserRole)
-  readonly role: 'ADMIN' | 'USER';
+  readonly role!: 'ADMIN' | 'USER';
 
   @ApiProperty({
     required: true,
   })
   @Type(() => String)
   @IsString()
-  readonly password: string;
+  readonly password!: string;
 }
 export { CreateUserDto };
