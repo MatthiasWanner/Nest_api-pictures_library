@@ -6,15 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { MorganInterceptor } from 'nest-morgan';
 
 @Controller('profiles')
 export class ProfilesController {
   constructor(private readonly service: ProfilesService) {}
 
+  @UseInterceptors(MorganInterceptor('combined'))
   @Post()
   async create(@Body() createProfileDto: CreateProfileDto) {
     try {
@@ -24,6 +27,7 @@ export class ProfilesController {
     }
   }
 
+  @UseInterceptors(MorganInterceptor('combined'))
   @Get()
   async findAll() {
     try {
@@ -33,6 +37,7 @@ export class ProfilesController {
     }
   }
 
+  @UseInterceptors(MorganInterceptor('combined'))
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -42,6 +47,7 @@ export class ProfilesController {
     }
   }
 
+  @UseInterceptors(MorganInterceptor('combined'))
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -54,6 +60,7 @@ export class ProfilesController {
     }
   }
 
+  @UseInterceptors(MorganInterceptor('combined'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
