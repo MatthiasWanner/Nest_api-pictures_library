@@ -12,21 +12,21 @@ import { Prisma } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly service: UsersService) {}
 
   @Post()
   create(@Body() createUserInput: Prisma.UserCreateInput) {
-    return this.usersService.create(createUserInput);
+    return this.service.create(createUserInput);
   }
 
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.service.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    return this.service.findOne(id);
   }
 
   @Patch(':id')
@@ -34,11 +34,11 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateUserInput: Prisma.UserUpdateInput,
   ) {
-    return this.usersService.update(id, updateUserInput);
+    return this.service.update(id, updateUserInput);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+    return this.service.remove(id);
   }
 }
