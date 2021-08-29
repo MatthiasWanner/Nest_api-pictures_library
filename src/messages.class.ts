@@ -6,3 +6,9 @@ export class Message {
   @IsString()
   message!: string;
 }
+
+export class WelcomeMessage extends Message {
+  @ApiProperty()
+  @IsString()
+  documentation!: string;
+}

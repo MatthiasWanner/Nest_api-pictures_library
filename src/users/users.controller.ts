@@ -17,7 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { MorganInterceptor } from 'nest-morgan';
 import { Message } from '@src/messages.class';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly service: UsersService) {}
