@@ -1,47 +1,53 @@
 import { Injectable } from '@nestjs/common';
+import { Message } from '@src/messages.class';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User, select } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    return await this.prisma.user.findMany({
+      select,
+    });
   }
 
-  async findOne(id: string) {
-    return await this.prisma.user.findUnique({ where: { id } });
+  async findOne(username: string) {
+    return await this.prisma.user.findUnique({
+      where: { username },
+      select,
+    });
   }
 
   async create(data: CreateUserDto): Promise<User> {
-    const { email, password, username } = data;
+    const { password: initialPassword, ...rest } = data;
 
-    const hashedPassword = bcrypt.hashSync(password, +process.env.BCRYPT_SALT);
+    const password = bcrypt.hashSync(initialPassword, +process.env.BCRYPT_SALT);
 
     return await this.prisma.user.create({
       data: {
-        email,
-        password: hashedPassword,
-        username,
+        ...rest,
+        password,
       },
+      select,
     });
   }
 
-  async update(id: string, data: UpdateUserDto) {
-    const user = await this.prisma.user.update({
+  async update(id: string, data: UpdateUserDto): Promise<User> {
+    return await this.prisma.user.update({
       where: { id },
       data,
+      select,
     });
-    return user;
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<Message> {
     await this.prisma.user.delete({ where: { id } });
-    return { messages: 'User deleted' };
+    return { message: 'User deleted' };
   }
 }
