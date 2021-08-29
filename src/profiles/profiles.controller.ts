@@ -12,12 +12,17 @@ import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { MorganInterceptor } from 'nest-morgan';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Profile } from './entities/profile.entity';
+import { Message } from '@src/messages.class';
 
+@ApiTags('Profiles')
 @Controller('profiles')
 export class ProfilesController {
   constructor(private readonly service: ProfilesService) {}
 
   @UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: Profile })
   @Post()
   async create(@Body() createProfileDto: CreateProfileDto) {
     try {
@@ -28,6 +33,7 @@ export class ProfilesController {
   }
 
   @UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: [Profile] })
   @Get()
   async findAll() {
     try {
@@ -38,6 +44,7 @@ export class ProfilesController {
   }
 
   @UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: Profile })
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -48,6 +55,7 @@ export class ProfilesController {
   }
 
   @UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: Profile })
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -61,6 +69,7 @@ export class ProfilesController {
   }
 
   @UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: Message })
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
