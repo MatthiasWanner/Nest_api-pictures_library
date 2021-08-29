@@ -20,7 +20,7 @@ class User {
   @IsString()
   readonly updatedAt!: Date;
 
-  // extends from CreateUserDto but return a tyerror
+  // TODO: extends from CreateUserDto but return a tyerror
   @ApiProperty({
     required: true,
   })
