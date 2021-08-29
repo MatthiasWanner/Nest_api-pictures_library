@@ -15,34 +15,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
+const swagger_1 = require("@nestjs/swagger");
 const create_user_dto_1 = require("./dto/create-user.dto");
+const user_entity_1 = require("./entities/user.entity");
 const update_user_dto_1 = require("./dto/update-user.dto");
 let UsersController = class UsersController {
-    constructor(usersService) {
-        this.usersService = usersService;
+    constructor(service) {
+        this.service = service;
     }
     create(createUserDto) {
-        return this.usersService.create(createUserDto);
+        return this.service.create(createUserDto);
     }
     findAll() {
-        return this.usersService.findAll();
+        return this.service.findAll();
     }
     findOne(id) {
-        return this.usersService.findOne(+id);
+        return this.service.findOne(id);
     }
     update(id, updateUserDto) {
-        return this.usersService.update(+id, updateUserDto);
+        return this.service.update(id, updateUserDto);
     }
     remove(id) {
-        return this.usersService.remove(+id);
+        return this.service.remove(id);
     }
 };
 __decorate([
+    swagger_1.ApiOkResponse({ type: user_entity_1.User }),
     common_1.Post(),
     __param(0, common_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
 __decorate([
     common_1.Get(),
@@ -73,6 +76,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "remove", null);
 UsersController = __decorate([
+    swagger_1.ApiTags('users'),
     common_1.Controller('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
