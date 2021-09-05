@@ -7,6 +7,7 @@ import { PrismaService } from './prisma.service';
 import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { ConfigModule } from '@nestjs/config';
+import { PicturesModule } from './pictures/pictures.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     PrismaService,
     MorganModule,
     ProfilesModule,
+    PicturesModule,
   ],
   controllers: [AppController],
   providers: [
