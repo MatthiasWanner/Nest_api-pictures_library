@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -20,7 +20,6 @@ class User {
   @IsString()
   readonly updatedAt!: Date;
 
-  // TODO: extends from CreateUserDto but return a tyerror
   @ApiProperty({
     required: true,
   })

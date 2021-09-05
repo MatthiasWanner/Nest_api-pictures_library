@@ -1,29 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEmail, IsEnum, IsString } from 'class-validator';
-import { UserRole } from '@users/entities/user.entity';
+import { IsString } from 'class-validator';
+import { User } from '@users/entities/user.entity';
 
-class CreateUserDto {
-  @ApiProperty({
-    required: true,
-  })
-  @IsString()
-  @Type(() => String)
-  readonly username!: string;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsEmail()
-  @Type(() => String)
-  readonly email!: string;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsEnum(UserRole)
-  readonly role!: 'ADMIN' | 'USER';
-
+class CreateUserDto extends OmitType(User, [
+  'createdAt',
+  'updatedAt',
+  'id',
+] as const) {
   @ApiProperty({
     required: true,
   })
