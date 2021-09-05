@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { ConfigModule } from '@nestjs/config';
 import { PicturesModule } from './pictures/pictures.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PicturesModule } from './pictures/pictures.module';
     MorganModule,
     ProfilesModule,
     PicturesModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [
