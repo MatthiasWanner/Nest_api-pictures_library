@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseInterceptors,
-  NotFoundException,
-} from '@nestjs/common';
+import * as common from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,15 +7,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { MorganInterceptor } from 'nest-morgan';
 import { Message } from '@src/messages.class';
 
+// TODO: type return, error handling
 @ApiTags('Users')
-@Controller('users')
+@common.Controller('users')
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: [User] })
-  @Get()
-  async findAll(): Promise<User[]> {
+  @common.Get()
+  async findAll() {
     try {
       return await this.service.findAll();
     } catch (error) {
@@ -33,54 +24,59 @@ export class UsersController {
     }
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: User })
   @ApiNotFoundResponse()
-  @Get(':username')
-  async findOne(
-    @Param('username') username: string,
-  ): Promise<User | NotFoundException> {
+  @common.Get(':username')
+  async findOne(@common.Param('username') username: string) {
     try {
       const user = await this.service.findOne(username);
-      if (!user) throw new NotFoundException('No User Found');
+      if (!user) throw new common.NotFoundException('No User Found');
       return user;
     } catch (error) {
-      return error;
+      throw new common.HttpException(
+        error as Message,
+        common.HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: User })
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  @common.Post()
+  async create(@common.Body() createUserDto: CreateUserDto): Promise<User> {
     return await this.service.create(createUserDto);
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: User })
-  @ApiNotFoundResponse({ type: NotFoundException }) // TODO: Write Not Found Exception class to swagger doc
-  @Patch(':id')
+  @ApiNotFoundResponse({ type: common.NotFoundException }) // TODO: Write Not Found Exception class to swagger doc
+  @common.Patch(':id')
   async update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User | NotFoundException> {
+    @common.Param('id') id: string,
+    @common.Body() updateUserDto: UpdateUserDto,
+  ) {
     try {
       const user = await this.service.findOne(id);
-      if (!user) throw new NotFoundException('No User Found');
+      if (!user) throw new common.NotFoundException('No User Found');
       return await this.service.update(id, updateUserDto);
     } catch (error) {
       return error;
     }
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: Message })
   @ApiNotFoundResponse()
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<Message | NotFoundException> {
+  @common.Delete(':id')
+  async remove(@common.Param('id') id: string) {
     try {
       const user = await this.service.findOne(id);
-      if (!user) throw new NotFoundException('No User Found');
+      if (!user) throw new common.NotFoundException('No User Found');
       return await this.service.remove(id);
     } catch (error) {
       return error;

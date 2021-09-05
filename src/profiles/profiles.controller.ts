@@ -1,30 +1,21 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseInterceptors,
-} from '@nestjs/common';
+import * as common from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { MorganInterceptor } from 'nest-morgan';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Profile } from './entities/profile.entity';
-import { Message } from '@src/messages.class';
 
 @ApiTags('Profiles')
-@Controller('profiles')
+@common.Controller('profiles')
 export class ProfilesController {
   constructor(private readonly service: ProfilesService) {}
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: Profile })
-  @Post()
-  async create(@Body() createProfileDto: CreateProfileDto) {
+  @common.Post()
+  async create(@common.Body() createProfileDto: CreateProfileDto) {
     try {
       return await this.service.create(createProfileDto);
     } catch (error) {
@@ -32,9 +23,10 @@ export class ProfilesController {
     }
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: [Profile] })
-  @Get()
+  @common.Get()
   async findAll() {
     try {
       return await this.service.findAll();
@@ -43,10 +35,11 @@ export class ProfilesController {
     }
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: Profile })
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
+  @common.Get(':id')
+  async findOne(@common.Param('id') id: string) {
     try {
       return await this.service.findOne({ id });
     } catch (error) {
@@ -54,12 +47,13 @@ export class ProfilesController {
     }
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: Profile })
-  @Patch(':id')
+  @common.Patch(':id')
   async update(
-    @Param('id') id: string,
-    @Body() updateProfileDto: UpdateProfileDto,
+    @common.Param('id') id: string,
+    @common.Body() updateProfileDto: UpdateProfileDto,
   ) {
     try {
       return await this.service.update(id, updateProfileDto);
@@ -68,13 +62,14 @@ export class ProfilesController {
     }
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
-  @ApiOkResponse({ type: Message })
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
+  @ApiResponse({ status: common.HttpStatus.NO_CONTENT })
+  @common.Delete(':id')
+  async remove(@common.Param('id') id: string) {
     try {
       await this.service.remove(id);
-      return { message: 'Profile Deleted' };
+      return common.HttpStatus.NO_CONTENT;
     } catch (error) {
       return error;
     }
