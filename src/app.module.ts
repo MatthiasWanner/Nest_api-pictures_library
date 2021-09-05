@@ -9,6 +9,7 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { ConfigModule } from '@nestjs/config';
 import { PicturesModule } from './pictures/pictures.module';
 import { CategoriesModule } from './categories/categories.module';
+import { AlbumsModule } from './albums/albums.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CategoriesModule } from './categories/categories.module';
     ProfilesModule,
     PicturesModule,
     CategoriesModule,
+    AlbumsModule,
   ],
   controllers: [AppController],
   providers: [
