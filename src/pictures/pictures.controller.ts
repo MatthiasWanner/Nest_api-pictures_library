@@ -15,42 +15,42 @@ export class PicturesController {
   @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: Picture })
   @common.Post()
-  create(@common.Body() createPictureDto: CreatePictureDto) {
-    return this.picturesService.create(createPictureDto);
+  async create(@common.Body() createPictureDto: CreatePictureDto) {
+    return await this.picturesService.create(createPictureDto);
   }
 
   // TODO: type return, error handling
   @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: [Picture] })
   @common.Get()
-  findAll() {
-    return this.picturesService.findAll();
+  async findAll() {
+    return await this.picturesService.findAll();
   }
 
   // TODO: type return, error handling
   @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: Picture })
   @common.Get(':id')
-  findOne(@common.Param('id') id: string) {
-    return this.picturesService.findOne(+id);
+  async findOne(@common.Param('id') id: string) {
+    return await this.picturesService.findOne(id);
   }
 
   // TODO: type return, error handling
   @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiOkResponse({ type: Picture })
   @common.Patch(':id')
-  update(
+  async update(
     @common.Param('id') id: string,
     @common.Body() updatePictureDto: UpdatePictureDto,
   ) {
-    return this.picturesService.update(+id, updatePictureDto);
+    return await this.picturesService.update(id, updatePictureDto);
   }
 
   // TODO: type return, error handling
   @common.UseInterceptors(MorganInterceptor('combined'))
   @ApiNoContentResponse({ description: 'No content' })
   @common.Delete(':id')
-  remove(@common.Param('id') id: string) {
-    return this.picturesService.remove(+id);
+  async remove(@common.Param('id') id: string) {
+    return await this.picturesService.remove(id);
   }
 }

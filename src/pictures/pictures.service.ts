@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '@src/prisma.service';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
 
 @Injectable()
 export class PicturesService {
-  create(createPictureDto: CreatePictureDto) {
-    return 'This action adds a new picture';
+  constructor(protected readonly prisma: PrismaService) {}
+
+  async create(data: CreatePictureDto) {
+    return await this.prisma.picture.create({ data });
   }
 
-  findAll() {
-    return `This action returns all pictures`;
+  async findAll() {
+    return await this.prisma.picture.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} picture`;
+  async findOne(id: string) {
+    return await this.prisma.picture.findUnique({ where: { id } });
   }
 
-  update(id: number, updatePictureDto: UpdatePictureDto) {
-    return `This action updates a #${id} picture`;
+  async update(id: string, data: UpdatePictureDto) {
+    return await this.prisma.picture.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} picture`;
+  async remove(id: string) {
+    return await this.prisma.picture.delete({ where: { id } });
   }
 }

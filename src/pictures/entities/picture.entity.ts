@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class Picture {
   @ApiProperty()
@@ -22,10 +22,9 @@ export class Picture {
   @Type(() => String)
   readonly title!: string;
 
-  @ApiProperty({
-    required: true,
-  })
+  @ApiProperty()
   @IsString()
+  @IsOptional()
   @Type(() => String)
   readonly description?: string;
 
