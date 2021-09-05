@@ -12,7 +12,11 @@
     "baseUrl": "./",
     "paths": {
       "@src/*": ["src/*"],
-      "@users/*": ["src/users/*"]
+      "@users/*": ["src/users/*"],
+      "@pictures/*": ["src/pictures/*"],
+      "@categories/*": ["src/categories/*"],
+      "@albums/*": ["src/albums/*"],
+      "@profiles/*": ["src/profiles/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
