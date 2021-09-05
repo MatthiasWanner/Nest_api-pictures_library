@@ -3,7 +3,12 @@ import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { MorganInterceptor } from 'nest-morgan';
-import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Profile } from './entities/profile.entity';
 
 @ApiTags('Profiles')
@@ -64,7 +69,7 @@ export class ProfilesController {
 
   // TODO: type return, error handling
   @common.UseInterceptors(MorganInterceptor('combined'))
-  @ApiResponse({ status: common.HttpStatus.NO_CONTENT })
+  @ApiNoContentResponse({ description: 'No content' })
   @common.Delete(':id')
   async remove(@common.Param('id') id: string) {
     try {

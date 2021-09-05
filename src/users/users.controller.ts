@@ -1,6 +1,11 @@
 import * as common from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -70,7 +75,7 @@ export class UsersController {
 
   // TODO: type return, error handling
   @common.UseInterceptors(MorganInterceptor('combined'))
-  @ApiOkResponse({ type: Message })
+  @ApiNoContentResponse({ description: 'No content' })
   @ApiNotFoundResponse()
   @common.Delete(':id')
   async remove(@common.Param('id') id: string) {
