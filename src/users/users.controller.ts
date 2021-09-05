@@ -80,8 +80,6 @@ export class UsersController {
   @common.Delete(':id')
   async remove(@common.Param('id') id: string) {
     try {
-      const user = await this.service.findOne(id);
-      if (!user) throw new common.NotFoundException('No User Found');
       return await this.service.remove(id);
     } catch (error) {
       return error;
