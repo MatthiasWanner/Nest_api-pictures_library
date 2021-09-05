@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import * as common from '@nestjs/common';
 import { PicturesService } from './pictures.service';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
+import { ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Picture } from './entities/picture.entity';
+import { MorganInterceptor } from 'nest-morgan';
 
-@Controller('pictures')
+@ApiTags('Pictures')
+@common.Controller('pictures')
 export class PicturesController {
   constructor(private readonly picturesService: PicturesService) {}
 
-  @Post()
-  create(@Body() createPictureDto: CreatePictureDto) {
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: Picture })
+  @common.Post()
+  create(@common.Body() createPictureDto: CreatePictureDto) {
     return this.picturesService.create(createPictureDto);
   }
 
-  @Get()
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: [Picture] })
+  @common.Get()
   findAll() {
     return this.picturesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: Picture })
+  @common.Get(':id')
+  findOne(@common.Param('id') id: string) {
     return this.picturesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePictureDto: UpdatePictureDto) {
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
+  @ApiOkResponse({ type: Picture })
+  @common.Patch(':id')
+  update(
+    @common.Param('id') id: string,
+    @common.Body() updatePictureDto: UpdatePictureDto,
+  ) {
     return this.picturesService.update(+id, updatePictureDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  // TODO: type return, error handling
+  @common.UseInterceptors(MorganInterceptor('combined'))
+  @ApiNoContentResponse({ description: 'No content' })
+  @common.Delete(':id')
+  remove(@common.Param('id') id: string) {
     return this.picturesService.remove(+id);
   }
 }
