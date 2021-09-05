@@ -6,9 +6,19 @@ import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
 import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, PrismaService, MorganModule, ProfilesModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env'],
+    }),
+    UsersModule,
+    PrismaService,
+    MorganModule,
+    ProfilesModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
