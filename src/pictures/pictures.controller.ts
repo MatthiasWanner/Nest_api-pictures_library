@@ -2,55 +2,72 @@ import * as common from '@nestjs/common';
 import { PicturesService } from './pictures.service';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
-import { ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import * as swagger from '@nestjs/swagger';
 import { Picture } from './entities/picture.entity';
 import { MorganInterceptor } from 'nest-morgan';
 
-@ApiTags('Pictures')
+@common.UseInterceptors(MorganInterceptor('combined'))
+@swagger.ApiTags('Pictures')
 @common.Controller('pictures')
 export class PicturesController {
   constructor(private readonly picturesService: PicturesService) {}
 
   // TODO: type return, error handling
-  @common.UseInterceptors(MorganInterceptor('combined'))
-  @ApiOkResponse({ type: Picture })
+  @swagger.ApiOkResponse({ type: Picture })
   @common.Post()
   async create(@common.Body() createPictureDto: CreatePictureDto) {
-    return await this.picturesService.create(createPictureDto);
+    try {
+      return await this.picturesService.create(createPictureDto);
+    } catch (error) {
+      return error;
+    }
   }
 
   // TODO: type return, error handling
-  @common.UseInterceptors(MorganInterceptor('combined'))
-  @ApiOkResponse({ type: [Picture] })
+  @swagger.ApiOkResponse({ type: [Picture] })
   @common.Get()
   async findAll() {
-    return await this.picturesService.findAll();
+    try {
+      return await this.picturesService.findAll();
+    } catch (error) {
+      return error;
+    }
   }
 
   // TODO: type return, error handling
-  @common.UseInterceptors(MorganInterceptor('combined'))
-  @ApiOkResponse({ type: Picture })
+  @swagger.ApiOkResponse({ type: Picture })
   @common.Get(':id')
   async findOne(@common.Param('id') id: string) {
-    return await this.picturesService.findOne(id);
+    try {
+      return await this.picturesService.findOne(id);
+    } catch (error) {
+      return error;
+    }
   }
 
   // TODO: type return, error handling
-  @common.UseInterceptors(MorganInterceptor('combined'))
-  @ApiOkResponse({ type: Picture })
+  @swagger.ApiOkResponse({ type: Picture })
   @common.Patch(':id')
   async update(
     @common.Param('id') id: string,
     @common.Body() updatePictureDto: UpdatePictureDto,
   ) {
-    return await this.picturesService.update(id, updatePictureDto);
+    try {
+      return await this.picturesService.update(id, updatePictureDto);
+    } catch (error) {
+      return error;
+    }
   }
 
   // TODO: type return, error handling
-  @common.UseInterceptors(MorganInterceptor('combined'))
-  @ApiNoContentResponse({ description: 'No content' })
+  @swagger.ApiNoContentResponse({ description: 'No content' })
   @common.Delete(':id')
+  @common.HttpCode(common.HttpStatus.NO_CONTENT)
   async remove(@common.Param('id') id: string) {
-    return await this.picturesService.remove(id);
+    try {
+      await this.picturesService.remove(id);
+    } catch (error) {
+      return error;
+    }
   }
 }

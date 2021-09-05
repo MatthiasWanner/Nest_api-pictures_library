@@ -1,17 +1,19 @@
 import * as common from '@nestjs/common';
-import { ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import * as swagger from '@nestjs/swagger';
+import { MorganInterceptor } from 'nest-morgan';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 
 //TODO: type all returns
-@ApiTags('Categories')
+@common.UseInterceptors(MorganInterceptor('combined'))
+@swagger.ApiTags('Categories')
 @common.Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @ApiOkResponse({ type: Category })
+  @swagger.ApiOkResponse({ type: Category })
   @common.Post()
   async create(@common.Body() createCategoryDto: CreateCategoryDto) {
     try {
@@ -21,7 +23,7 @@ export class CategoriesController {
     }
   }
 
-  @ApiOkResponse({ type: [Category] })
+  @swagger.ApiOkResponse({ type: [Category] })
   @common.Get()
   async findAll() {
     try {
@@ -31,7 +33,7 @@ export class CategoriesController {
     }
   }
 
-  @ApiOkResponse({ type: Category })
+  @swagger.ApiOkResponse({ type: Category })
   @common.Get(':id')
   async findOne(@common.Param('id') id: string) {
     try {
@@ -41,7 +43,7 @@ export class CategoriesController {
     }
   }
 
-  @ApiOkResponse({ type: Category })
+  @swagger.ApiOkResponse({ type: Category })
   @common.Patch(':id')
   async update(
     @common.Param('id') id: string,
@@ -54,7 +56,7 @@ export class CategoriesController {
     }
   }
 
-  @ApiNoContentResponse({ description: 'No content' })
+  @swagger.ApiNoContentResponse({ description: 'No content' })
   @common.Delete(':id')
   @common.HttpCode(common.HttpStatus.NO_CONTENT)
   async remove(@common.Param('id') id: string) {
