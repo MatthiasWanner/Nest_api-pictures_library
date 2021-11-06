@@ -22,5 +22,5 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["src", "scripts", "test"]
+  "include": ["src"]
 }
