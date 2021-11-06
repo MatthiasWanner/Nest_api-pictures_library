@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: photos_library
       POSTGRES_DB: photos_library
     volumes:
-      - db-data:/var/lib/postgresql/data/
+      - photos-library:/var/lib/postgresql/data/
     ports:
       - '5432:5432'
 
@@ -18,4 +18,4 @@ services:
       - 8080:8080
 
 volumes:
-  db-data: # named volumes can be managed easier using docker-compose
+  photos-library: # named volumes can be managed easier using docker-compose
