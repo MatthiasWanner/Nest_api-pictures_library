@@ -19,7 +19,7 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('NestJs Photos API')
-    .setDescription('An API that can manage pictures libraries')
+    .setDescription('An API that manages photo library')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
