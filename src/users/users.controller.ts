@@ -57,7 +57,7 @@ export class UsersController {
     @common.Body() updateUserDto: UpdateUserDto,
   ) {
     try {
-      const user = await this.service.findOne(id);
+      const user = await this.service.update(id, updateUserDto);
       if (!user) throw new common.NotFoundException('No User Found');
       return await this.service.update(id, updateUserDto);
     } catch (error) {
