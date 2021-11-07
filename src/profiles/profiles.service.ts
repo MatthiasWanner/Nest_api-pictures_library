@@ -9,9 +9,8 @@ export class ProfilesService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateProfileDto) {
-    const { userId, ...rest } = data;
     return await this.prisma.profile.create({
-      data: { ...rest, user: { connect: { id: userId } } },
+      data,
     });
   }
 
@@ -20,7 +19,10 @@ export class ProfilesService {
   }
 
   async findOne(args: ProfileWhereArgs) {
-    return await this.prisma.profile.findFirst({ where: { ...args } });
+    return await this.prisma.profile.findFirst({
+      where: { ...args },
+      rejectOnNotFound: true,
+    });
   }
 
   async update(id: string, data: UpdateProfileDto) {

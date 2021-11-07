@@ -5,6 +5,8 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { MorganInterceptor } from 'nest-morgan';
 import * as swagger from '@nestjs/swagger';
 import { Profile } from './entities/profile.entity';
+import { getPrismaError } from '@src/utils/prisma.utils';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @common.UseInterceptors(MorganInterceptor('combined'))
 @swagger.ApiTags('Profiles')
@@ -19,7 +21,7 @@ export class ProfilesController {
     try {
       return await this.service.create(createProfileDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -30,7 +32,7 @@ export class ProfilesController {
     try {
       return await this.service.findAll();
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -41,7 +43,7 @@ export class ProfilesController {
     try {
       return await this.service.findOne({ id });
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -55,7 +57,7 @@ export class ProfilesController {
     try {
       return await this.service.update(id, updateProfileDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -65,9 +67,9 @@ export class ProfilesController {
   @common.HttpCode(common.HttpStatus.NO_CONTENT)
   async remove(@common.Param('id') id: string) {
     try {
-      await this.service.remove(id);
+      return await this.service.remove(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

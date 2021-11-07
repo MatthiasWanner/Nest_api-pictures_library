@@ -1,6 +1,9 @@
 import * as common from '@nestjs/common';
 import * as swagger from '@nestjs/swagger';
 import { MorganInterceptor } from 'nest-morgan';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+
+import { getPrismaError } from '@src/utils/prisma.utils';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -16,9 +19,9 @@ export class AlbumsController {
   @common.Post()
   async create(@common.Body() createAlbumDto: CreateAlbumDto) {
     try {
-      return this.albumsService.create(createAlbumDto);
+      return await this.albumsService.create(createAlbumDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -26,9 +29,9 @@ export class AlbumsController {
   @common.Get()
   async findAll() {
     try {
-      return this.albumsService.findAll();
+      return await this.albumsService.findAll();
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -36,9 +39,9 @@ export class AlbumsController {
   @common.Get(':id')
   async findOne(@common.Param('id') id: string) {
     try {
-      return this.albumsService.findOne(id);
+      return await this.albumsService.findOne(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -49,9 +52,9 @@ export class AlbumsController {
     @common.Body() updateAlbumDto: UpdateAlbumDto,
   ) {
     try {
-      return this.albumsService.update(id, updateAlbumDto);
+      return await this.albumsService.update(id, updateAlbumDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -60,9 +63,9 @@ export class AlbumsController {
   @common.HttpCode(common.HttpStatus.NO_CONTENT)
   async remove(@common.Param('id') id: string) {
     try {
-      return this.albumsService.remove(id);
+      return await this.albumsService.remove(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

@@ -16,7 +16,10 @@ export class PicturesService {
   }
 
   async findOne(id: string) {
-    return await this.prisma.picture.findUnique({ where: { id } });
+    return await this.prisma.picture.findUnique({
+      where: { id },
+      rejectOnNotFound: true,
+    });
   }
 
   async update(id: string, data: UpdatePictureDto) {
