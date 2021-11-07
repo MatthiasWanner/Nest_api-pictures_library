@@ -1,10 +1,13 @@
 import * as common from '@nestjs/common';
+import * as swagger from '@nestjs/swagger';
+import { MorganInterceptor } from 'nest-morgan';
+
 import { PicturesService } from './pictures.service';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
-import * as swagger from '@nestjs/swagger';
 import { Picture } from './entities/picture.entity';
-import { MorganInterceptor } from 'nest-morgan';
+import { getPrismaError } from '@src/utils/prisma.utils';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @common.UseInterceptors(MorganInterceptor('combined'))
 @swagger.ApiTags('Pictures')
@@ -19,7 +22,7 @@ export class PicturesController {
     try {
       return await this.picturesService.create(createPictureDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -30,7 +33,7 @@ export class PicturesController {
     try {
       return await this.picturesService.findAll();
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -41,7 +44,7 @@ export class PicturesController {
     try {
       return await this.picturesService.findOne(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -55,7 +58,7 @@ export class PicturesController {
     try {
       return await this.picturesService.update(id, updatePictureDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -65,9 +68,9 @@ export class PicturesController {
   @common.HttpCode(common.HttpStatus.NO_CONTENT)
   async remove(@common.Param('id') id: string) {
     try {
-      await this.picturesService.remove(id);
+      return await this.picturesService.remove(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

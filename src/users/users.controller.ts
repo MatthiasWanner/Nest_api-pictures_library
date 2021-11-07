@@ -1,11 +1,13 @@
 import * as common from '@nestjs/common';
-import { UsersService } from './users.service';
 import * as swagger from '@nestjs/swagger';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { MorganInterceptor } from 'nest-morgan';
+
+import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { MorganInterceptor } from 'nest-morgan';
-import { Message } from '@src/messages.class';
+import { getPrismaError } from '@src/utils/prisma.utils';
 
 // TODO: type return, error handling
 @common.UseInterceptors(MorganInterceptor('combined'))
@@ -20,7 +22,7 @@ export class UsersController {
     try {
       return await this.service.findAll();
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -30,14 +32,9 @@ export class UsersController {
   @common.Get(':username')
   async findOne(@common.Param('username') username: string) {
     try {
-      const user = await this.service.findOne(username);
-      if (!user) throw new common.NotFoundException('No User Found');
-      return user;
+      return await this.service.findOne(username);
     } catch (error) {
-      throw new common.HttpException(
-        error as Message,
-        common.HttpStatus.BAD_REQUEST,
-      );
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -45,7 +42,11 @@ export class UsersController {
   @swagger.ApiOkResponse({ type: User })
   @common.Post()
   async create(@common.Body() createUserDto: CreateUserDto): Promise<User> {
-    return await this.service.create(createUserDto);
+    try {
+      return await this.service.create(createUserDto);
+    } catch (error) {
+      throw getPrismaError(error as PrismaClientKnownRequestError);
+    }
   }
 
   // TODO: type return, error handling
@@ -57,11 +58,9 @@ export class UsersController {
     @common.Body() updateUserDto: UpdateUserDto,
   ) {
     try {
-      const user = await this.service.update(id, updateUserDto);
-      if (!user) throw new common.NotFoundException('No User Found');
       return await this.service.update(id, updateUserDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -72,9 +71,9 @@ export class UsersController {
   @common.HttpCode(common.HttpStatus.NO_CONTENT)
   async remove(@common.Param('id') id: string) {
     try {
-      await this.service.remove(id);
+      return await this.service.remove(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

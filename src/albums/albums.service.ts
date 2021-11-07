@@ -15,7 +15,10 @@ export class AlbumsService {
   }
 
   async findOne(id: string) {
-    return await this.prisma.album.findUnique({ where: { id } });
+    return await this.prisma.album.findUnique({
+      where: { id },
+      rejectOnNotFound: true,
+    });
   }
 
   async update(id: string, data: UpdateAlbumDto) {

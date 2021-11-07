@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from '@src/messages.class';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from 'src/prisma.service';
@@ -21,6 +20,7 @@ export class UsersService {
     return await this.prisma.user.findUnique({
       where: { username },
       select,
+      rejectOnNotFound: true,
     });
   }
 
@@ -46,8 +46,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: string): Promise<Message> {
-    await this.prisma.user.delete({ where: { id } });
-    return { message: 'User deleted' };
+  async remove(id: string): Promise<User> {
+    return await this.prisma.user.delete({ where: { id }, select });
   }
 }

@@ -15,7 +15,6 @@ export const getPrismaError = ({
   name,
   message,
 }: PrismaClientKnownRequestError): nest.HttpException => {
-  console.log('welcome error', code, meta, name, message);
   if (!code) {
     switch (name) {
       case 'NotFoundError':

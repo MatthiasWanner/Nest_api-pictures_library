@@ -16,7 +16,10 @@ export class CategoriesService {
   }
 
   async findOne(id: string) {
-    return await this.prisma.category.findUnique({ where: { id } });
+    return await this.prisma.category.findUnique({
+      where: { id },
+      rejectOnNotFound: true,
+    });
   }
 
   async update(id: string, data: UpdateCategoryDto) {

@@ -1,5 +1,7 @@
 import * as common from '@nestjs/common';
 import * as swagger from '@nestjs/swagger';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { getPrismaError } from '@src/utils/prisma.utils';
 import { MorganInterceptor } from 'nest-morgan';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -19,7 +21,7 @@ export class CategoriesController {
     try {
       return await this.categoriesService.create(createCategoryDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -29,7 +31,7 @@ export class CategoriesController {
     try {
       return await this.categoriesService.findAll();
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -39,7 +41,7 @@ export class CategoriesController {
     try {
       return await this.categoriesService.findOne(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -52,7 +54,7 @@ export class CategoriesController {
     try {
       return await this.categoriesService.update(id, updateCategoryDto);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -61,9 +63,9 @@ export class CategoriesController {
   @common.HttpCode(common.HttpStatus.NO_CONTENT)
   async remove(@common.Param('id') id: string) {
     try {
-      await this.categoriesService.remove(id);
+      return await this.categoriesService.remove(id);
     } catch (error) {
-      return error;
+      throw getPrismaError(error as PrismaClientKnownRequestError);
     }
   }
 }
