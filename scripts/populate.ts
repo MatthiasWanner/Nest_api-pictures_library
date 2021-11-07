@@ -31,93 +31,77 @@ async function populate(salt: number) {
 
   const prisma = new PrismaClient();
 
-  const { profile } = await prisma.user.create({
-    data: {
-      username: faker.internet.userName(),
-      password: hashSync('password', salt),
-      email: faker.internet.email(),
-      role: 'USER',
-      profile: {
-        create: {
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
-          avatarUrl: faker.image.avatar(),
-          albums: {
-            createMany: {
-              data: new Array(3).fill(null).map(() => ({
+  try {
+    const { profile } = await prisma.user.create({
+      data: {
+        username: faker.internet.userName(),
+        password: hashSync('password', salt),
+        email: faker.internet.email(),
+        role: 'USER',
+        profile: {
+          create: {
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            avatarUrl: faker.image.avatar(),
+            albums: {
+              createMany: {
+                data: new Array(3).fill(null).map(() => ({
+                  title: faker.lorem.sentence(randomNumber(1, 3)),
+                  description: faker.lorem.paragraph(),
+                })),
+              },
+            },
+          },
+        },
+      },
+      select: {
+        profile: {
+          select: {
+            albums: {
+              select: {
+                id: true,
+              },
+            },
+            id: true,
+          },
+        },
+      },
+    });
+
+    const { albums, id: profileId } = profile as {
+      id: string;
+      albums: {
+        id: string;
+      }[];
+    };
+
+    await Promise.all(
+      albums.map(async ({ id }) => {
+        await prisma.album.update({
+          where: { id },
+          data: {
+            categories: {
+              create: {
+                profileId,
+                name: faker.lorem.word(),
+              },
+            },
+            pictures: {
+              create: new Array(randomNumber(5, 10)).fill(null).map(() => ({
+                url: faker.image.imageUrl(),
                 title: faker.lorem.sentence(randomNumber(1, 3)),
                 description: faker.lorem.paragraph(),
+                profileId,
               })),
             },
           },
-        },
-      },
-    },
-    select: {
-      profile: {
-        select: {
-          albums: {
-            select: {
-              id: true,
-            },
-          },
-          id: true,
-        },
-      },
-    },
-  });
-
-  const { albums, id: profileId } = profile as {
-    id: string;
-    albums: {
-      id: string;
-    }[];
-  };
-
-  Promise.all(
-    albums.map(async ({ id }) => {
-      await prisma.album.update({
-        where: { id },
-        data: {
-          categories: {
-            create: {
-              profileId,
-              name: faker.lorem.word(),
-            },
-          },
-          pictures: {
-            create: new Array(randomNumber(5, 10)).fill(null).map(() => ({
-              url: faker.image.imageUrl(),
-              title: faker.lorem.sentence(randomNumber(1, 3)),
-              description: faker.lorem.paragraph(),
-              profileId,
-            })),
-          },
-        },
-      });
-    }),
-  );
-
-  //  const albums =  new Array(3).fill(null).map(() => ({
-  //     title: faker.lorem.sentence(randomNumber(1, 3)),
-  //     description: faker.lorem.paragraph(),
-  //     categories: {
-  //       create: {
-  //         name: faker.lorem.word(),
-  //       },
-  //     },
-
-  //     pictures: {
-  //       createMany: {
-  //         data: new Array(randomNumber(5, 10)).fill(null).map(() => ({
-  //           url: faker.image.imageUrl(),
-  //           title: faker.lorem.sentence(randomNumber(1, 3)),
-  //           description: faker.lorem.paragraph(),
-  //         })),
-  //       },
-  //     },
-
-  prisma.$disconnect();
-
-  console.info('Populated database successfully');
+        });
+      }),
+    );
+  } catch (error) {
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+    console.info('Populated database successfully');
+  }
 }
