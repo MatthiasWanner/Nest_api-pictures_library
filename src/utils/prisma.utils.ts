@@ -8,24 +8,24 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 export const prismaErrors = {
   P2002: (fields: string[]) =>
     `Unique constraint failed on field: ${fields.join(', ')}`,
-  P2025: (cause: string) =>
-    `An operation failed because it depends on one or more records that were required but not found. ${cause}`,
+  P2025: (cause: string) => `${cause}`,
 };
 
 export const getPrismaError = ({
   code,
   meta,
   name,
+  message,
 }: PrismaClientKnownRequestError) => {
   if (!code) {
     switch (name) {
       case 'NotFoundError':
         return new NotFoundException('Resource not found');
+      default:
+        return new InternalServerErrorException(
+          message || 'Unknow prisma Error',
+        );
     }
-  } else if (!Object.keys(prismaErrors).includes(code)) {
-    return new InternalServerErrorException(
-      `Unhandled ${code} prisma error code`,
-    );
   } else {
     switch (code) {
       case 'P2002':
@@ -34,6 +34,10 @@ export const getPrismaError = ({
       case 'P2025':
         const { cause } = meta as NotFoundDependRecordMeta;
         return new BadRequestException(prismaErrors.P2025(cause));
+      default:
+        return new InternalServerErrorException(
+          `Unhandled ${code} prisma error code. message: ${message}`,
+        );
     }
   }
 };
