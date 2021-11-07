@@ -11,10 +11,14 @@ if (require.main === module) {
     throw new Error('BCRYPT_SALT environment variable must be defined');
   }
 
-  seed(+BCRYPT_SALT).catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+  seed(+BCRYPT_SALT)
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    })
+    .finally(() => {
+      process.exit();
+    });
 }
 
 async function seed(salt: number) {
@@ -28,6 +32,9 @@ async function seed(salt: number) {
       password: hashSync('admin', salt),
       email: 'admin@seed.fr',
       role: 'ADMIN',
+      profile: {
+        create: {},
+      },
     },
   });
 
